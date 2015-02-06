@@ -4,4 +4,5 @@
     android:layout_height="match_parent"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
+    android:textColor="@color/primary_text_default_material_light"
     android:id="@+id/list_item_forecast_textview" />
