@@ -51,7 +51,8 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment {
 
-    List<String> mWeekForecast;
+    private List<String> mWeekForecast;
+    private ForecastAdapter mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -154,7 +155,8 @@ public class ForecastFragment extends Fragment {
         // Get a reference to the RecyclerView, and attach a  adapter to it.
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
         // attach the adapter
-        recyclerView.setAdapter(new ForecastAdapter());
+        mForecastAdapter = new ForecastAdapter();
+        recyclerView.setAdapter(mForecastAdapter);
         // A RecyclerView.Adapter needs a LayoutManager
         // We simply use a LinearLayout, provided by the framework
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -348,6 +350,20 @@ public class ForecastFragment extends Fragment {
 
             // This will only happen if there was an error getting or parsing the forecast.
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                mWeekForecast.clear();
+                for (String dayForecastStr : result) {
+                    mWeekForecast.add(dayForecastStr);
+                }
+                // New data is back from the server.  Hooray!
+
+                // because this is no ArrayAdapter, we have to trigger refresh manually
+                mForecastAdapter.notifyDataSetChanged();
+            }
         }
     }
 
