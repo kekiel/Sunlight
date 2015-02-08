@@ -150,15 +150,15 @@ public class ForecastFragment extends Fragment {
         // The ForecastAdapter will take data from a source (like our dummy forecast) and
         // use it to populate the RecyclerView it's attached to.
 
-        // inflate the basic view containing the RecyclerView element
+// inflate the basic view containing the RecyclerView element
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        // Get a reference to the RecyclerView, and attach a  adapter to it.
+// Get a reference to the RecyclerView, and attach a  adapter to it.
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
-        // attach the adapter
+// attach the adapter
         mForecastAdapter = new ForecastAdapter();
         recyclerView.setAdapter(mForecastAdapter);
-        // A RecyclerView.Adapter needs a LayoutManager
-        // We simply use a LinearLayout, provided by the framework
+// A RecyclerView.Adapter needs a LayoutManager
+// We simply use a LinearLayout, provided by the framework
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
@@ -171,7 +171,7 @@ public class ForecastFragment extends Fragment {
         /* The date/time conversion code is going to be moved outside the asynctask later,
          * so for convenience we're breaking it out into its own method now.
          */
-        private String getReadableDateString(long time){
+        private String getReadableDateString(long time) {
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
             Date date = new Date(time * 1000);
@@ -194,7 +194,7 @@ public class ForecastFragment extends Fragment {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
-         *
+         * <p/>
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
          */
@@ -214,7 +214,7 @@ public class ForecastFragment extends Fragment {
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
             String[] resultStrs = new String[numDays];
-            for(int i = 0; i < weatherArray.length(); i++) {
+            for (int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
                 String description;
@@ -345,19 +345,19 @@ public class ForecastFragment extends Fragment {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(String[] result) {
-            if (result != null) {
-                mWeekForecast.clear();
-                for (String dayForecastStr : result) {
-                    mWeekForecast.add(dayForecastStr);
-                }
-                // New data is back from the server.  Hooray!
-
-                // because this is no ArrayAdapter, we have to trigger refresh manually
-                mForecastAdapter.notifyDataSetChanged();
-            }
+@Override
+protected void onPostExecute(String[] result) {
+    if (result != null) {
+        mWeekForecast.clear();
+        for (String dayForecastStr : result) {
+            mWeekForecast.add(dayForecastStr);
         }
+        // New data is back from the server.  Hooray!
+
+        // because this is no ArrayAdapter, we have to trigger refresh manually
+        mForecastAdapter.notifyDataSetChanged();
+    }
+}
     }
 
 }
