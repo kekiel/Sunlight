@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,23 +88,30 @@ public class ForecastFragment extends Fragment {
      * A ViewHolder to be used by the new ForecastAdapter.
      * Holds references to the items in the list elements.
      */
-    private class ForecastViewHolder extends RecyclerView.ViewHolder {
+private class ForecastViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView mItemTextView;
-        private String mForecastString;
+    private TextView mItemTextView;
+    private String mForecastString;
 
-        // constructor fetches the TextView reference to store it in a member variable
-        public ForecastViewHolder(View itemView) {
-            super(itemView);
-            mItemTextView = (TextView) itemView.findViewById(R.id.list_item_forecast_textview);
-        }
-
-        // will be used by the adapter to apply a value to the TextView
-        public void bindForecast(String forecast) {
-            mForecastString = forecast;
-            mItemTextView.setText(forecast);
-        }
+    // constructor fetches the TextView reference to store it in a member variable
+    public ForecastViewHolder(View itemView) {
+        super(itemView);
+        mItemTextView = (TextView) itemView.findViewById(R.id.list_item_forecast_textview);
+        mItemTextView.setOnClickListener(this);
     }
+
+    // will be used by the adapter to apply a value to the TextView
+    public void bindForecast(String forecast) {
+        mForecastString = forecast;
+        mItemTextView.setText(forecast);
+    }
+
+    @Override
+    public void onClick(View v) {
+        TextView textView = (TextView) v;
+        Toast.makeText(getActivity(), textView.getText(), Toast.LENGTH_SHORT).show();
+    }
+}
 
     /**
      * Adapter for the RecyclerView.
@@ -150,15 +158,15 @@ public class ForecastFragment extends Fragment {
         // The ForecastAdapter will take data from a source (like our dummy forecast) and
         // use it to populate the RecyclerView it's attached to.
 
-// inflate the basic view containing the RecyclerView element
+        // inflate the basic view containing the RecyclerView element
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-// Get a reference to the RecyclerView, and attach a  adapter to it.
+        // Get a reference to the RecyclerView, and attach a  adapter to it.
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
-// attach the adapter
+        // attach the adapter
         mForecastAdapter = new ForecastAdapter();
         recyclerView.setAdapter(mForecastAdapter);
-// A RecyclerView.Adapter needs a LayoutManager
-// We simply use a LinearLayout, provided by the framework
+        // A RecyclerView.Adapter needs a LayoutManager
+        // We simply use a LinearLayout, provided by the framework
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
@@ -345,19 +353,19 @@ public class ForecastFragment extends Fragment {
             return null;
         }
 
-@Override
-protected void onPostExecute(String[] result) {
-    if (result != null) {
-        mWeekForecast.clear();
-        for (String dayForecastStr : result) {
-            mWeekForecast.add(dayForecastStr);
-        }
-        // New data is back from the server.  Hooray!
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                mWeekForecast.clear();
+                for (String dayForecastStr : result) {
+                    mWeekForecast.add(dayForecastStr);
+                }
+                // New data is back from the server.  Hooray!
 
-        // because this is no ArrayAdapter, we have to trigger refresh manually
-        mForecastAdapter.notifyDataSetChanged();
-    }
-}
+                // because this is no ArrayAdapter, we have to trigger refresh manually
+                mForecastAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 }
