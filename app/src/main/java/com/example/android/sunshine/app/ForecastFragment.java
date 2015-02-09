@@ -15,6 +15,7 @@
  */
 package com.example.android.sunshine.app;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +109,10 @@ private class ForecastViewHolder extends RecyclerView.ViewHolder implements View
     @Override
     public void onClick(View v) {
         TextView textView = (TextView) v;
-        Toast.makeText(getActivity(), textView.getText(), Toast.LENGTH_SHORT).show();
+        String forecast = (String) textView.getText();
+        Intent intent = new Intent(getActivity(), DetailActivity.class)
+                .putExtra(Intent.EXTRA_TEXT, forecast);
+        startActivity(intent);
     }
 }
 
