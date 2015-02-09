@@ -18,7 +18,9 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -108,11 +110,24 @@ private class ForecastViewHolder extends RecyclerView.ViewHolder implements View
 
     @Override
     public void onClick(View v) {
+        int selectedPosition = getPosition();
         TextView textView = (TextView) v;
         String forecast = (String) textView.getText();
         Intent intent = new Intent(getActivity(), DetailActivity.class)
                 .putExtra(Intent.EXTRA_TEXT, forecast);
-        startActivity(intent);
+
+
+        // use a shared elements transition if >= Android L (API 21)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // collect the shared elements
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    getActivity(), v, "shared_item_text");
+            // has to be called on the activity, not the fragment
+            getActivity().startActivity(intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
+
     }
 }
 
