@@ -9,9 +9,9 @@
     tools:context="com.example.android.sunshine.app.DetailActivity.DetailFragment">
 
     <TextView
+        android:id="@+id/detail_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_text"
-        android:transitionName="shared_item_text"/>
+        android:transitionName="shared_item_text" />
 
 </RelativeLayout>

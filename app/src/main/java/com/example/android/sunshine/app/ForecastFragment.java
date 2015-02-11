@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,52 +91,59 @@ public class ForecastFragment extends Fragment {
      * A ViewHolder to be used by the new ForecastAdapter.
      * Holds references to the items in the list elements.
      */
-private class ForecastViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class ForecastViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TextView mItemTextView;
-    private String mForecastString;
+        private TextView mItemTextView;
+        private String mForecastString;
 
-    // constructor fetches the TextView reference to store it in a member variable
-    public ForecastViewHolder(View itemView) {
-        super(itemView);
-        mItemTextView = (TextView) itemView.findViewById(R.id.list_item_forecast_textview);
-        mItemTextView.setOnClickListener(this);
-    }
+        // constructor fetches the TextView reference to store it in a member variable
+        public ForecastViewHolder(View itemView) {
+            super(itemView);
+            mItemTextView = (TextView) itemView.findViewById(R.id.list_item_forecast_textview);
+            mItemTextView.setOnClickListener(this);
 
-    // will be used by the adapter to apply a value to the TextView
-    public void bindForecast(String forecast) {
-        mForecastString = forecast;
-        mItemTextView.setText(forecast);
-    }
+            // selectableItemBackground only available in >= Android L (API 21)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                TypedValue val = new TypedValue();
+                getActivity().getTheme().resolveAttribute(R.attr.selectableItemBackground, val, true);
+                mItemTextView.setBackgroundResource(val.resourceId);
+            }
 
-    @Override
-    public void onClick(View v) {
-        int selectedPosition = getPosition();
-        TextView textView = (TextView) v;
-        String forecast = (String) textView.getText();
-        Intent intent = new Intent(getActivity(), DetailActivity.class)
-                .putExtra(Intent.EXTRA_TEXT, forecast);
-
-
-        // use a shared elements transition if >= Android L (API 21)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // collect the shared elements
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    getActivity(), v, "shared_item_text");
-            // has to be called on the activity, not the fragment
-            getActivity().startActivity(intent, options.toBundle());
-        } else {
-            startActivity(intent);
         }
 
+        // will be used by the adapter to apply a value to the TextView
+        public void bindForecast(String forecast) {
+            mForecastString = forecast;
+            mItemTextView.setText(forecast);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int selectedPosition = getPosition();
+            TextView textView = (TextView) v;
+            String forecast = (String) textView.getText();
+            Intent intent = new Intent(getActivity(), DetailActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT, forecast);
+
+            // use a shared elements transition if >= Android L (API 21)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // collect the shared elements
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(), v, "shared_item_text");
+                // has to be called on the activity, not the fragment
+                getActivity().startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
+            }
+        }
     }
-}
 
     /**
      * Adapter for the RecyclerView.
      * Binds the values of mWeekForecast array to the list_item_forecast view.
      */
     private class ForecastAdapter extends RecyclerView.Adapter<ForecastViewHolder> {
+
         @Override
         public ForecastViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             // when initially created, inflate the view and init the ViewHolder
