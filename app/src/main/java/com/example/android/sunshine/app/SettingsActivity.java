@@ -36,8 +36,6 @@ public class SettingsActivity extends PreferenceActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // add the missing toolbar
-
         // Add 'general' preferences, defined in the XML file
         // TODO: Add preferences from XML
 

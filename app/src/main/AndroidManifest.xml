@@ -29,6 +29,7 @@
         <activity
             android:name="com.example.android.sunshine.app.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:theme="@android:style/Theme.DeviceDefault"
             android:parentActivityName="com.example.android.sunshine.app.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
